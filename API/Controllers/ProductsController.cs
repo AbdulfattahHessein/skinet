@@ -12,7 +12,11 @@ namespace API.Controllers;
 public class ProductsController(IProductRepository repository) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProducts(string? type, string? brand, string? sort)
+    public async Task<ActionResult<IEnumerable<Product>>> GetProducts(
+        string? type,
+        string? brand,
+        string? sort
+    )
     {
         return Ok(await repository.GetProductsAsync(type, brand, sort));
     }
@@ -21,7 +25,8 @@ public class ProductsController(IProductRepository repository) : ControllerBase
     public async Task<ActionResult<Product>> GetProductById(int id)
     {
         var product = await repository.GetProductByIdAsync(id);
-        if (product is null) return NotFound();
+        if (product is null)
+            return NotFound();
         return product;
     }
 
@@ -39,7 +44,8 @@ public class ProductsController(IProductRepository repository) : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct(int id, Product product)
     {
-        if (!repository.ProductExists(id) || id != product.Id) return NotFound();
+        if (!repository.ProductExists(id) || id != product.Id)
+            return NotFound();
         repository.UpdateProduct(product);
 
         if (await repository.SaveChangesAsync())
@@ -47,14 +53,14 @@ public class ProductsController(IProductRepository repository) : ControllerBase
             return NoContent();
         }
         return BadRequest("Failed to update product");
-
     }
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
         var product = await repository.GetProductByIdAsync(id);
-        if (product is null) return NotFound();
+        if (product is null)
+            return NotFound();
         repository.DeleteProduct(product);
         if (await repository.SaveChangesAsync())
         {
@@ -62,6 +68,7 @@ public class ProductsController(IProductRepository repository) : ControllerBase
         }
         return BadRequest("Failed to delete product");
     }
+
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
@@ -73,6 +80,4 @@ public class ProductsController(IProductRepository repository) : ControllerBase
     {
         return Ok(await repository.GetTypesAsync());
     }
-
-
 }

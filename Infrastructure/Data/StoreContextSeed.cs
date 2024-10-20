@@ -11,9 +11,12 @@ public class StoreContextSeed
         if (!context.Products.Any())
         {
             Directory.GetCurrentDirectory();
-            var productsData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/products.json");
+            var productsData = await File.ReadAllTextAsync(
+                "../Infrastructure/Data/SeedData/products.json"
+            );
             var products = JsonSerializer.Deserialize<List<Product>>(productsData);
-            if (products is null) return;
+            if (products is null)
+                return;
             await context.Products.AddRangeAsync(products);
             await context.SaveChangesAsync();
         }
