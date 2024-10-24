@@ -15,10 +15,6 @@ public class BaseSpecification<T> : ISpecification<T>
 
     public Expression<Func<T, bool>>? Criteria { get; protected set; }
 
-    public List<Expression<Func<T, object>>> Includes => throw new NotImplementedException();
-
-    public List<string> IncludeStrings => throw new NotImplementedException();
-
     public Expression<Func<T, object>>? OrderBy { get; set; }
 
     public Expression<Func<T, object>>? OrderByDescending { get; set; }
