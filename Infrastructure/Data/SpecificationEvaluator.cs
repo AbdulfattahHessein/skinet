@@ -9,7 +9,7 @@ public static class SpecificationEvaluator
         this IQueryable<T> inputQuery,
         ISpecification<T> spec
     )
-        where T : BaseEntity
+    // where T : BaseEntity
     {
         var query = inputQuery;
         if (spec.Criteria != null)
@@ -27,14 +27,15 @@ public static class SpecificationEvaluator
             query = query.OrderByDescending(spec.OrderByDescending);
         }
 
-        // if (spec.IsDistinct)
-        // {
-        //     query = query.Distinct();
-        // }
-        // if (spec.IsPagingEnabled)
-        // {
-        //     query = query.Skip(spec.Skip).Take(spec.Take);
-        // }
+        if (spec.IsDistinct)
+        {
+            query = query.Distinct();
+        }
+
+        if (spec.IsPagingEnabled)
+        {
+            query = query.Skip(spec.Skip).Take(spec.Take);
+        }
 
         // query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
         // query = spec.IncludeStrings.Aggregate(
@@ -50,9 +51,12 @@ public static class SpecificationEvaluator
     )
         where T : BaseEntity
     {
-        var query = inputQuery.ApplySpecification<T>(spec);
+        var selectQuery = inputQuery.ApplySpecification<T>(spec).Select(spec.Selector);
 
-        var selectQuery = query.Select(spec.Selector);
+        if (spec.SelectorCriteria != null)
+        {
+            selectQuery = selectQuery.Where(spec.SelectorCriteria);
+        }
 
         if (spec.IsDistinct)
         {

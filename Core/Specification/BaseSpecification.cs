@@ -13,7 +13,7 @@ public class BaseSpecification<T> : ISpecification<T>
         Criteria = criteria;
     }
 
-    public Expression<Func<T, bool>>? Criteria { get; private set; }
+    public Expression<Func<T, bool>>? Criteria { get; protected set; }
 
     public List<Expression<Func<T, object>>> Includes => throw new NotImplementedException();
 
@@ -24,6 +24,12 @@ public class BaseSpecification<T> : ISpecification<T>
     public Expression<Func<T, object>>? OrderByDescending { get; set; }
 
     public bool IsDistinct { get; private set; }
+
+    public int Take { get; private set; }
+
+    public int Skip { get; private set; }
+
+    public bool IsPagingEnabled { get; private set; }
 
     protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
     {
@@ -36,18 +42,45 @@ public class BaseSpecification<T> : ISpecification<T>
     }
 
     protected void ApplyDistinct() => IsDistinct = true;
+
+    protected void ApplyPaging(int skip, int take)
+    {
+        Skip = skip;
+        Take = take;
+        IsPagingEnabled = true;
+    }
+
+    public IQueryable<T> ApplyCriteria(IQueryable<T> inputQuery)
+    {
+        if (Criteria != null)
+            inputQuery = inputQuery.Where(Criteria);
+        return inputQuery;
+    }
 }
 
 public class BaseSpecification<T, TResult> : BaseSpecification<T>, ISpecification<T, TResult>
 {
+    public Expression<Func<T, TResult>> Selector { get; private set; }
+
+    public Expression<Func<TResult, bool>>? SelectorCriteria { get; private set; }
+
     public BaseSpecification(
         Expression<Func<T, TResult>> selector,
-        Expression<Func<T, bool>>? criteria = null
+        Expression<Func<TResult, bool>>? SelectorCriteria = null
+    )
+    {
+        Selector = selector;
+        this.SelectorCriteria = SelectorCriteria;
+    }
+
+    public BaseSpecification(
+        Expression<Func<T, bool>>? criteria,
+        Expression<Func<T, TResult>> selector,
+        Expression<Func<TResult, bool>>? SelectorCriteria = null
     )
         : base(criteria)
     {
         Selector = selector;
+        this.SelectorCriteria = SelectorCriteria;
     }
-
-    public Expression<Func<T, TResult>> Selector { get; private set; }
 }

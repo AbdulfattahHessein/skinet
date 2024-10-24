@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,11 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T>
 
     public void Add(T entity) => context.Add(entity);
 
-    public Task<int> CountAsync(ISpecification<T> spec)
+    public Task<int> CountAsync(Expression<Func<T, bool>>? criteria)
     {
-        throw new NotImplementedException();
+        if (criteria is null)
+            return dbSet.CountAsync();
+        return dbSet.CountAsync(criteria);
     }
 
     public void Delete(T entity) => context.Remove(entity);

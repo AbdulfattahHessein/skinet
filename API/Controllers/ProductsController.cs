@@ -1,3 +1,4 @@
+using API.RequestHelpers;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
@@ -5,22 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-public class ProductsController(IGenericRepository<Product> repository) : ControllerBase
+public class ProductsController(IGenericRepository<Product> repository) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts(
-        string? type,
-        string? brand,
-        string? sort
+        [FromQuery] ProductSpecParams specParams
     )
     {
-        var spec = new ProductSpecification(brand, type, sort);
+        var spec = new ProductSpecification(specParams);
 
-        var products = await repository.ListAsync(spec);
-
-        return Ok(products);
+        return await CreatePageResult(repository, spec, specParams.PageIndex, specParams.PageSize);
     }
 
     [HttpGet("{id:int}")]
@@ -74,7 +69,7 @@ public class ProductsController(IGenericRepository<Product> repository) : Contro
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
-        var spec = new ProductSpecification<string>(p => p.Brand, true);
+        var spec = new ProductSpecification<string>(null, p => p.Brand, null, true);
 
         return Ok(await repository.ListAsync(spec));
     }
@@ -82,7 +77,7 @@ public class ProductsController(IGenericRepository<Product> repository) : Contro
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
-        var spec = new ProductSpecification<string>(p => p.Type, true);
+        var spec = new ProductSpecification<string>(null, p => p.Type, null, true);
 
         return Ok(await repository.ListAsync(spec));
     }
