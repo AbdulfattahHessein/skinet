@@ -1,4 +1,5 @@
 using API.Middlewares;
+using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services;
@@ -30,6 +31,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
 
 builder.Services.AddSingleton<ICartService, CartService>();
 
+builder.Services.AddIdentityApiEndpoints<AppUser>().AddEntityFrameworkStores<StoreContext>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,6 +48,8 @@ app.UseCors(opt =>
 });
 
 app.MapControllers();
+
+app.MapGroup("api").MapIdentityApi<AppUser>();
 
 try
 {
