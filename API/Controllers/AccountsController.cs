@@ -1,5 +1,3 @@
-using System;
-using System.Security.Claims;
 using API.DTOs;
 using API.Extensions;
 using Core.Entities;

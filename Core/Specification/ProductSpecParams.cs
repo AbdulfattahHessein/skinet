@@ -1,5 +1,3 @@
-using System;
-
 namespace Core.Specification;
 
 public class ProductSpecParams
