@@ -25,7 +25,7 @@ public class CartController(ICartService cartService) : BaseApiController
     }
 
     [HttpDelete]
-    public async Task<ActionResult<ShoppingCart>> UpdateCart(string id)
+    public async Task<ActionResult<ShoppingCart>> DeleteCart(string id)
     {
         var isDeleted = await cartService.DeleteCartAsync(id);
         if (!isDeleted)
