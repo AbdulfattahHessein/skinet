@@ -36,7 +36,7 @@ public class ProductSpecification<TResult> : BaseSpecification<Product, TResult>
     public ProductSpecification(
         Expression<Func<Product, bool>>? criteria,
         Expression<Func<Product, TResult>> selector,
-        Expression<Func<TResult, bool>>? selectorCriteria,
+        Expression<Func<TResult, bool>>? selectorCriteria = null,
         bool IsDistinct = false
     )
         : base(criteria, selector, selectorCriteria)

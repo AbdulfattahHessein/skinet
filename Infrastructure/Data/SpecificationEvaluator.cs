@@ -1,5 +1,6 @@
 using Core.Entities;
 using Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
@@ -9,7 +10,7 @@ public static class SpecificationEvaluator
         this IQueryable<T> inputQuery,
         ISpecification<T> spec
     )
-    // where T : BaseEntity
+        where T : BaseEntity
     {
         var query = inputQuery;
         if (spec.Criteria != null)
@@ -37,11 +38,11 @@ public static class SpecificationEvaluator
             query = query.Skip(spec.Skip).Take(spec.Take);
         }
 
-        // query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
-        // query = spec.IncludeStrings.Aggregate(
-        //     query,
-        //     (current, include) => current.Include(include)
-        // );
+        query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
+        query = spec.IncludeStrings.Aggregate(
+            query,
+            (current, include) => current.Include(include)
+        );
         return query;
     }
 
