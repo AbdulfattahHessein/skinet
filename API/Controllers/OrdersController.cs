@@ -13,7 +13,7 @@ namespace API.Controllers;
 public class OrdersController(IUnitOfWork unit, ICartService cartService) : BaseApiController
 {
     [HttpPost]
-    public async Task<ActionResult<Order>> CreateOrder(CreateOrderDto orderDto)
+    public async Task<ActionResult<OrderDto>> CreateOrder(CreateOrderDto orderDto)
     {
         var email = User.GetEmail();
 
@@ -67,14 +67,14 @@ public class OrdersController(IUnitOfWork unit, ICartService cartService) : Base
 
         if (await unit.Complete())
         {
-            return order;
+            return order.ToDto();
         }
 
         return BadRequest("Failed to create order");
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Order>>> GetOrdersForUser()
+    public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetOrdersForUser()
     {
         var spec = new OrderSpecification(User.GetEmail());
 

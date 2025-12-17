@@ -6,6 +6,7 @@ namespace API.DTOs;
 
 public class OrderDto
 {
+    public int Id { get; set; }
     public DateTime OrderDate { get; set; } = DateTime.UtcNow;
     public required string BuyerEmail { get; set; }
     public required decimal ShippingPrice { get; set; }
@@ -21,6 +22,7 @@ public class OrderDto
 
 public class OrderItemDto
 {
+    public int Id { get; set; }
     public int ProductId { get; set; }
     public required string ProductName { get; set; }
     public required string PictureUrl { get; set; }

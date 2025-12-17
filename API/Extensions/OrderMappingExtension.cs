@@ -13,6 +13,7 @@ public static class OrderMappingExtension
         {
             return new OrderDto
             {
+                Id = order.Id,
                 BuyerEmail = order.BuyerEmail,
                 OrderDate = order.OrderDate,
                 Status = order.Status.ToString(),
@@ -36,6 +37,7 @@ public static class OrderMappingExtension
         {
             return new OrderItemDto
             {
+                Id = item.Id,
                 ProductId = item.ItemOrdered.ProductId,
                 ProductName = item.ItemOrdered.ProductName,
                 PictureUrl = item.ItemOrdered.PictureUrl,
