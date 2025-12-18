@@ -21,4 +21,9 @@
     <Folder Include="SignalR\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\**" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+
 </Project>
